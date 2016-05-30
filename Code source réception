@@ -1,0 +1,23 @@
+#include <IRremote.h>
+
+int RECV_PIN = A0;  // on dit au programme que le digital 11 est la patte de receeption
+IRrecv irrecv(RECV_PIN); // prototype de la fonction de reception
+decode_results results;  // prototype de la fonction de decodage
+
+void setup ()
+{
+  pinMode (2,OUTPUT);
+  Serial.begin(9600);  // pour initialiser le moniteur serie
+  irrecv.enableIRIn(); // pour initialiser le récepteur infrarouge
+}
+
+void loop ()
+{
+  if (irrecv.decode(&results)) // cette fonction verifie si le recepteur recoit une valeur ou pas
+  {
+    
+    Serial.println (results.value, HEX);
+    irrecv.resume(); // prepare le recepteur a recevoir la valeur suivante
+  }
+  delay (500);
+}
