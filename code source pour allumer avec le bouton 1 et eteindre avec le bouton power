@@ -1,0 +1,47 @@
+#include <IRremote.h>
+
+int RECV_PIN = A0;  // on dit au programme que le digital 11 est la patte de receeption
+IRrecv irrecv(RECV_PIN); // prototype de la fonction de reception
+decode_results results;  // prototype de la fonction de decodage
+
+void setup ()
+{
+  pinMode (2,OUTPUT);
+  Serial.begin(9600);  // pour initialiser le moniteur serie
+  irrecv.enableIRIn(); // pour initialiser le récepteur infrarouge
+}
+
+void loop ()
+{
+  if (irrecv.decode(&results)) // cette fonction verifie si le recepteur recoit une valeur ou pas
+  {
+    
+    translateIR(); // cette fonction contient les actions a effectuer 
+    irrecv.resume(); // prepare le recepteur a recevoir la valeur suivante
+  }
+  
+}
+
+void translateIR ()
+{
+switch (results.value) // debut de condition 
+{
+  case 0xFF30CF: // si la valeur reçu correpond a la valeur hexadecimal du boutton 1
+  digitalWrite (2, HIGH); // allume la led
+  Serial.println (" LED ALLUME"); // affiche le message entre guillemet dans le serial monitor
+  break; // fin de condition
+
+  case 0xFFA25D : // si la valeur reçu correpond a la valeur hexadecimal du boutton power
+  digitalWrite (2, LOW); // eteint la led
+  Serial.println (" LED ETEINTE"); // affiche le message entre guillemet dans le serial monitor
+  break;// fin de condition
+
+  default : // si la valeur reçu ne correspond a aucune des valeurs précédente
+  Serial.println ("desolé numéro incorrect appuyez sur 1 ou la touche rouge"); // affiche le message entre guillemet dans le serial monitor
+  break; // fin de condition
+}
+
+delay(500);
+
+}
+  
