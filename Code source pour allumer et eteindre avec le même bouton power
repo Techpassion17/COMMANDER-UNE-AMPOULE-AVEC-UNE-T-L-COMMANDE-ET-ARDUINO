@@ -1,0 +1,62 @@
+#include <IRremote.h>
+
+int RECV_PIN = A0;  // on dit au programme que le digital 11 est la patte de receeption
+IRrecv irrecv(RECV_PIN); // prototype de la fonction de reception
+decode_results results;  // prototype de la fonction de decodage
+bool etat ; // declaration de la variable booleene qui definira l'etat de la led
+
+
+
+
+
+void setup ()
+{
+  pinMode (2,OUTPUT);
+  Serial.begin(9600);  // pour initialiser le moniteur serie
+  irrecv.enableIRIn(); // pour initialiser le récepteur infrarouge
+}
+
+void loop ()
+{
+  if (irrecv.decode(&results)) // cette fonction verifie si le recepteur recoit une valeur ou pas
+  {
+    
+    translateIR(); // cette fonction contient les actions a effectuer 
+    
+    irrecv.resume(); // prepare le recepteur a recevoir la valeur suivante
+  }
+
+  
+}
+
+
+
+void translateIR ()
+{
+if (results.value == 0xFFA25D ) // si la valeur reçu correpond a la valeur hexadecimal du boutton 1
+{
+  etat = !etat ; // cette ligne veux dire que a chaque fois d'executer l'etat contraire a l'etat actuel ce qui veu dire que si l'etat actuel est true il va executer le contraire false  
+
+  if  ( etat == true ) // si l'etat du booleen est true
+  
+  {
+    digitalWrite (2,HIGH);// allume la led 
+  Serial.println (" LED ALLUME ");// affiche affiche le messager entre guillemet dans le serial monitor
+  }
+
+  if ( etat == false ) // si l'etat du booleen est false 
+  
+  {digitalWrite (2,LOW); // eteint la led
+  Serial.println (" LED ETEINTE "); // affiche affiche le messager entre guillemet dans le serial monitor
+  }
+  
+}
+
+delay(500);
+
+
+}
+
+
+   
+
